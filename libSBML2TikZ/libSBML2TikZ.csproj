@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SBML2TikZ</RootNamespace>
     <AssemblyName>SBML2TikZ</AssemblyName>
@@ -42,7 +42,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\thirdparty\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,11 +50,11 @@
   <ItemGroup>
     <Reference Include="OntologyStorage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\OntologyStorage.dll</HintPath>
+      <HintPath>..\thirdparty\OntologyStorage.dll</HintPath>
     </Reference>
-    <Reference Include="SBMLExtension, Version=2.7.3698.27963, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SBMLExtension, Version=2.7.3729.19675, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SBMLExtension.dll</HintPath>
+      <HintPath>..\thirdparty\SBMLExtension.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

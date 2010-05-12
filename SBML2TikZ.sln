@@ -1,7 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C# Express 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBMLRenderExtension2TikZ", "RenderExtension2TikZ\SBMLRenderExtension2TikZ.csproj", "{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libSBML2TikZ", "libSBML2TikZ\libSBML2TikZ.csproj", "{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SBML2TikZ_GUI", "SBML2TikZGUI\SBML2TikZ_GUI.csproj", "{4F38E172-450D-4488-92A0-E5C985CD7527}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07758FD9-D79C-4B65-99DF-FB8A169BC8EE} = {07758FD9-D79C-4B65-99DF-FB8A169BC8EE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +18,10 @@ Global
 		{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F38E172-450D-4488-92A0-E5C985CD7527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F38E172-450D-4488-92A0-E5C985CD7527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F38E172-450D-4488-92A0-E5C985CD7527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F38E172-450D-4488-92A0-E5C985CD7527}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
