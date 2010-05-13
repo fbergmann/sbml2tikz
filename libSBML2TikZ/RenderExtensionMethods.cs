@@ -123,34 +123,34 @@ namespace SBML2TikZ
                         }
                     }
                 }
-                if (glyph is ReactionGlyph)
-                {
-                    ReactionGlyph rGlyph = (ReactionGlyph)glyph;
-                    foreach (SpeciesReference reference in rGlyph.SpeciesReferences)
-                    {
-                        Style styleForObjectType = rendinfo.GetStyleForObjectId(reference);
-                        if (styleForObjectType == null)
-                            styleForObjectType = rendinfo.GetStyleForObjectRole(reference);
-                        if (styleForObjectType == null)
-                            styleForObjectType = rendinfo.GetStyleForObjectType(reference);
-                        if (styleForObjectType == null)
-                            group.SpeciesReferenceTex(reference, writer, g, rendinfo, group, scale, fontTexTable);
-                        else
-                            group.SpeciesReferenceTex(reference, writer, g, rendinfo, styleForObjectType.Group, scale, fontTexTable);
-                    }
-                }
+                //if (glyph is ReactionGlyph)
+                //{
+                //    //ReactionGlyph rGlyph = (ReactionGlyph)glyph;
+                //    //foreach (SpeciesReference reference in rGlyph.SpeciesReferences)
+                //    //{
+                //    //    Style styleForObjectType = rendinfo.GetStyleForObjectId(reference);
+                //    //    if (styleForObjectType == null)
+                //    //        styleForObjectType = rendinfo.GetStyleForObjectRole(reference);
+                //    //    if (styleForObjectType == null)
+                //    //        styleForObjectType = rendinfo.GetStyleForObjectType(reference);
+                //    //    if (styleForObjectType == null)
+                //    //        group.SpeciesReferenceTex(reference, writer, g, rendinfo, group, scale, fontTexTable);
+                //    //    else
+                //    //        group.SpeciesReferenceTex(reference, writer, g, rendinfo, styleForObjectType.Group, scale, fontTexTable);
+                //    //}
+                //}
             }
 
-            if (!string.IsNullOrEmpty(group.EndHead))
-            {
-                LineEnding endhead = rendinfo.GetLineEnding(group.StartHead);
-                endhead.LineEndingTex(glyph, writer, g, rendinfo, group, scale, false, fontTexTable);
-            }
-            if (!string.IsNullOrEmpty(group.StartHead))
-            {
-                LineEnding starthead = rendinfo.GetLineEnding(group.EndHead);
-                starthead.LineEndingTex(glyph, writer, g, rendinfo, group, scale, false, fontTexTable);
-            }
+            //if (!string.IsNullOrEmpty(group.EndHead))
+            //{
+            //    LineEnding endhead = rendinfo.GetLineEnding(group.EndHead);
+            //    endhead.LineEndingTex(glyph, writer, g, rendinfo, group, scale, false, fontTexTable);
+            //}
+            //if (!string.IsNullOrEmpty(group.StartHead))
+            //{
+            //    LineEnding starthead = rendinfo.GetLineEnding(group.StartHead);
+            //    starthead.LineEndingTex(glyph, writer, g, rendinfo, group, scale, false, fontTexTable);
+            //}
         }
 
         private static void RotateAndShift(this SBMLExtension.EmlRenderExtension.GraphicalObject obj, RectangleF bound_rectangle, IndentedTextWriter writer)
