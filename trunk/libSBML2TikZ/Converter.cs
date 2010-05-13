@@ -38,10 +38,9 @@ namespace SBML2TikZ
             setDefaultFontTexTable();
         }
 
-        public Converter(string filename)
+        public Converter(string filename):this()
         {
-            ReadFromSBML(filename);
-            setDefaultFontTexTable();
+            ReadFromSBML(filename, false);
         }
 
         // convenience method for obtaining a TikZ document; executes all the necessary methods in the right order
@@ -51,12 +50,12 @@ namespace SBML2TikZ
             return conv.ToTex(conv.layout);
         }
 
-        public void ReadFromSBML(string filename)
+        public void ReadFromSBML(string filename, Boolean useSBGN)
         {
             if (File.Exists(filename))
             {
                 _SBML = File.ReadAllText(filename);
-                Layout.ReplaceLayoutWithSBGNDefault = false;
+                Layout.ReplaceLayoutWithSBGNDefault = useSBGN;
                 _layout = SBMLExtension.Util.readLayout(_SBML); //default use the first layout
                 specs = new RenderSpecs(_layout);
                 SBMLExtension.Util.CurrentDirectory = Path.GetDirectoryName(filename);

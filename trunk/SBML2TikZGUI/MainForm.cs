@@ -15,6 +15,7 @@ namespace SBML2TikZ_GUI
     {
         private string sbml; // the sbml file to be converted
         private Boolean compileWithPdflatex;
+        private Boolean useSBGN;
         private Converter conv;
         private event fileNameChangeHandler nameChange;
         private event unitsChangeHandler heightUnitsChange;
@@ -43,7 +44,7 @@ namespace SBML2TikZ_GUI
             dHeightBoxUnits.SelectedItem = units.pts;
             dWidthBoxUnits.SelectedItem = units.pts;
             this.sbml = name;
-            conv.ReadFromSBML(name);
+            conv.ReadFromSBML(name, useSBGN);
             // set the size boxes and their units 
             if (conv.specs != null)
             {
@@ -285,6 +286,12 @@ namespace SBML2TikZ_GUI
                 desiredHeightBox.Text = conv.specs.desiredHeight.ToString();
                 desiredWidthBox.Text = conv.specs.desiredWidth.ToString();
             }
+        }
+
+        private void SBGNCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.useSBGN = SBGNCheckBox.Checked;
+            conv.ReadFromSBML(sbml, useSBGN);
         }
 
     }

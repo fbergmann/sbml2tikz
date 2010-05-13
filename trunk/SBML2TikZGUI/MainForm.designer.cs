@@ -77,14 +77,15 @@ namespace SBML2TikZ_GUI
             this.widthBox = new System.Windows.Forms.TextBox();
             this.heightBoxUnits = new System.Windows.Forms.ListBox();
             this.widthBoxUnits = new System.Windows.Forms.ListBox();
+            this.SBGNCheckBox = new System.Windows.Forms.CheckBox();
             this.load_Panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(279, 262);
+            this.button1.Location = new System.Drawing.Point(279, 230);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(147, 31);
             this.button1.TabIndex = 2;
@@ -126,7 +127,6 @@ namespace SBML2TikZ_GUI
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 127);
@@ -137,7 +137,6 @@ namespace SBML2TikZ_GUI
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 161);
@@ -148,7 +147,6 @@ namespace SBML2TikZ_GUI
             // 
             // desiredHeightBox
             // 
-            this.desiredHeightBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.desiredHeightBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.desiredHeightBox.Location = new System.Drawing.Point(234, 127);
             this.desiredHeightBox.Name = "desiredHeightBox";
@@ -157,7 +155,6 @@ namespace SBML2TikZ_GUI
             // 
             // desiredWidthBox
             // 
-            this.desiredWidthBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.desiredWidthBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.desiredWidthBox.Location = new System.Drawing.Point(234, 160);
             this.desiredWidthBox.Name = "desiredWidthBox";
@@ -166,7 +163,6 @@ namespace SBML2TikZ_GUI
             // 
             // dWidthBoxUnits
             // 
-            this.dWidthBoxUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dWidthBoxUnits.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dWidthBoxUnits.FormattingEnabled = true;
             this.dWidthBoxUnits.ItemHeight = 23;
@@ -177,7 +173,6 @@ namespace SBML2TikZ_GUI
             // 
             // dHeightBoxUnits
             // 
-            this.dHeightBoxUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dHeightBoxUnits.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dHeightBoxUnits.FormattingEnabled = true;
             this.dHeightBoxUnits.ItemHeight = 23;
@@ -188,7 +183,6 @@ namespace SBML2TikZ_GUI
             // 
             // LayoutSelectionBox
             // 
-            this.LayoutSelectionBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LayoutSelectionBox.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LayoutSelectionBox.FormattingEnabled = true;
             this.LayoutSelectionBox.ItemHeight = 23;
@@ -200,10 +194,9 @@ namespace SBML2TikZ_GUI
             // 
             // CompileCheckBox
             // 
-            this.CompileCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CompileCheckBox.AutoSize = true;
             this.CompileCheckBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CompileCheckBox.Location = new System.Drawing.Point(281, 239);
+            this.CompileCheckBox.Location = new System.Drawing.Point(121, 240);
             this.CompileCheckBox.Name = "CompileCheckBox";
             this.CompileCheckBox.Size = new System.Drawing.Size(129, 17);
             this.CompileCheckBox.TabIndex = 14;
@@ -213,7 +206,6 @@ namespace SBML2TikZ_GUI
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(12, 195);
@@ -224,7 +216,6 @@ namespace SBML2TikZ_GUI
             // 
             // label4
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(12, 59);
@@ -235,7 +226,6 @@ namespace SBML2TikZ_GUI
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(12, 93);
@@ -246,7 +236,6 @@ namespace SBML2TikZ_GUI
             // 
             // heightBox
             // 
-            this.heightBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.heightBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.heightBox.Location = new System.Drawing.Point(234, 59);
             this.heightBox.Name = "heightBox";
@@ -256,7 +245,6 @@ namespace SBML2TikZ_GUI
             // 
             // widthBox
             // 
-            this.widthBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.widthBox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.widthBox.Location = new System.Drawing.Point(234, 94);
             this.widthBox.Name = "widthBox";
@@ -266,7 +254,6 @@ namespace SBML2TikZ_GUI
             // 
             // heightBoxUnits
             // 
-            this.heightBoxUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.heightBoxUnits.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.heightBoxUnits.FormattingEnabled = true;
             this.heightBoxUnits.ItemHeight = 23;
@@ -278,7 +265,6 @@ namespace SBML2TikZ_GUI
             // 
             // widthBoxUnits
             // 
-            this.widthBoxUnits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.widthBoxUnits.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.widthBoxUnits.FormattingEnabled = true;
             this.widthBoxUnits.ItemHeight = 23;
@@ -288,11 +274,24 @@ namespace SBML2TikZ_GUI
             this.widthBoxUnits.TabIndex = 21;
             this.widthBoxUnits.SelectedIndexChanged += new System.EventHandler(this.widthBoxUnits_SelectedIndexChanged);
             // 
+            // SBGNCheckBox
+            // 
+            this.SBGNCheckBox.AutoSize = true;
+            this.SBGNCheckBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SBGNCheckBox.Location = new System.Drawing.Point(17, 240);
+            this.SBGNCheckBox.Name = "SBGNCheckBox";
+            this.SBGNCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.SBGNCheckBox.TabIndex = 23;
+            this.SBGNCheckBox.Text = "Use SBGN";
+            this.SBGNCheckBox.UseVisualStyleBackColor = true;
+            this.SBGNCheckBox.CheckedChanged += new System.EventHandler(this.SBGNCheckBox_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 312);
+            this.ClientSize = new System.Drawing.Size(436, 273);
+            this.Controls.Add(this.SBGNCheckBox);
             this.Controls.Add(this.widthBoxUnits);
             this.Controls.Add(this.heightBoxUnits);
             this.Controls.Add(this.widthBox);
@@ -343,5 +342,6 @@ namespace SBML2TikZ_GUI
         private TextBox widthBox;
         private ListBox heightBoxUnits;
         private ListBox widthBoxUnits;
+        private CheckBox SBGNCheckBox;
     }
 }
