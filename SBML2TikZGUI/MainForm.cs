@@ -8,6 +8,7 @@ using SBML2TikZ;
 
 public delegate void fileNameChangeHandler(object sender, string name);
 public delegate void unitsChangeHandler(ListBox sender, TextBox target, units newUnit, units oldUnit);
+public delegate void compileToPdfChangeHandler(object sender, Boolean compiledToPDF); //useful if we want to extend support to other TeX environments
 
 namespace SBML2TikZ_GUI
 {
@@ -16,10 +17,13 @@ namespace SBML2TikZ_GUI
         private string sbml; // the sbml file to be converted
         private Boolean compileWithPdflatex;
         private Boolean useSBGN;
+        private Boolean showOutDir;
+        private Boolean showPDF;
         private Converter conv;
-        private event fileNameChangeHandler nameChange;
-        private event unitsChangeHandler heightUnitsChange;
-        private event unitsChangeHandler widthUnitsChange;
+        private event fileNameChangeHandler nameChange; //event when user selects a new SBML file
+        private event unitsChangeHandler heightUnitsChange; //event when user changes the desired height units
+        private event unitsChangeHandler widthUnitsChange; // event when user changes the desired width units
+        private event compileToPdfChangeHandler compileWithPdfLaTeXChange; //event when compileWithPdfLaTeXCheckBox has checkbox changed
 
         public MainForm()
         {
@@ -31,6 +35,7 @@ namespace SBML2TikZ_GUI
             }
             compileWithPdflatex = false;
             nameChange += new fileNameChangeHandler(displayChange); // Used to change the sbml file loaded
+            compileWithPdfLaTeXChange += new compileToPdfChangeHandler(enableShowPDFCheckBox);
             //Complete mainform initialization
             InitializeComponent();
             InitializeMyComponents(); // sets default values to UserAppDataRegistry values            
@@ -106,6 +111,13 @@ namespace SBML2TikZ_GUI
             }
         }
 
+        private void enableShowPDFCheckBox(object sender, Boolean compiledToPDF)
+        {
+            showPDFCheckBox.Enabled = compiledToPDF;
+            if (!compiledToPDF)
+                showPDFCheckBox.Checked = false; //if the TeX will not be compiled to PDF, then no pdf will be shown
+        }
+
         private void Convert2pdf_Click(object sender, EventArgs e)
         {
             Application.UserAppDataRegistry.SetValue("compileWithPdflatex", compileWithPdflatex);
@@ -158,9 +170,12 @@ namespace SBML2TikZ_GUI
                         }
                     }
 
-                    MessageBox.Show(Path.GetFileName(filename) + " has been successfully written to" + Path.GetDirectoryName(filename) + ".",
-                                    "Conversion Successful",
-                                    MessageBoxButtons.OK);
+                    if (showOutDir)
+                    {
+                        MessageBox.Show(Path.GetFileName(filename) + " has been successfully written to" + Path.GetDirectoryName(filename) + ".",
+                                        "Conversion Successful",
+                                        MessageBoxButtons.OK);
+                    }
                     if (compileWithPdflatex)
                     {
                         compiletolatex(filename);
@@ -223,11 +238,7 @@ namespace SBML2TikZ_GUI
             {
                 try
                 {
-                    DialogResult dresult = MessageBox.Show("Open the new pdf?",
-                                           "Conversion Successful",
-                                           MessageBoxButtons.YesNo);
-
-                    if (dresult == DialogResult.Yes)
+                    if (showPDF)
                         Process.Start(pdffilename);
                 }
                 catch (Exception ex)
@@ -260,6 +271,10 @@ namespace SBML2TikZ_GUI
         private void CompileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             this.compileWithPdflatex = CompileCheckBox.Checked;
+            if (compileWithPdfLaTeXChange != null)
+            {
+                compileWithPdfLaTeXChange(new object(), compileWithPdflatex);
+            }
         }
 
         private void heightBoxUnits_SelectedIndexChanged(object sender, EventArgs e)
@@ -294,6 +309,16 @@ namespace SBML2TikZ_GUI
         {
             this.useSBGN = SBGNCheckBox.Checked;
             conv.ReadFromSBML(sbml, useSBGN);
+        }
+
+        private void showOutDirCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.showOutDir = showOutDirCheckBox.Checked;
+        }
+
+        private void showPDFCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.showPDF = showPDFCheckBox.Checked;
         }
 
     }

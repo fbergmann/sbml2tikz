@@ -31,6 +31,7 @@ namespace SBML2TikZ_GUI
             widthBoxUnits.Items.AddRange(new object[] { units.pts, units.cm, units.inches });
             dHeightBoxUnits.Items.AddRange(new object[] { units.pts, units.cm, units.inches });
             dWidthBoxUnits.Items.AddRange(new object[] { units.pts, units.cm, units.inches });
+            showPDFCheckBox.Enabled = false; //only enabled if user has compileWithPDF set to true
             if (Application.UserAppDataRegistry.GetValue("xmlname") != null && File.Exists((string)Application.UserAppDataRegistry.GetValue("xmlname")))
             {
                 if (nameChange != null)
@@ -78,14 +79,16 @@ namespace SBML2TikZ_GUI
             this.heightBoxUnits = new System.Windows.Forms.ListBox();
             this.widthBoxUnits = new System.Windows.Forms.ListBox();
             this.SBGNCheckBox = new System.Windows.Forms.CheckBox();
+            this.showOutDirCheckBox = new System.Windows.Forms.CheckBox();
+            this.showPDFCheckBox = new System.Windows.Forms.CheckBox();
             this.load_Panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(279, 230);
+            this.button1.Location = new System.Drawing.Point(279, 240);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(147, 31);
             this.button1.TabIndex = 2;
@@ -196,7 +199,7 @@ namespace SBML2TikZ_GUI
             // 
             this.CompileCheckBox.AutoSize = true;
             this.CompileCheckBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CompileCheckBox.Location = new System.Drawing.Point(121, 240);
+            this.CompileCheckBox.Location = new System.Drawing.Point(121, 235);
             this.CompileCheckBox.Name = "CompileCheckBox";
             this.CompileCheckBox.Size = new System.Drawing.Size(129, 17);
             this.CompileCheckBox.TabIndex = 14;
@@ -278,7 +281,7 @@ namespace SBML2TikZ_GUI
             // 
             this.SBGNCheckBox.AutoSize = true;
             this.SBGNCheckBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SBGNCheckBox.Location = new System.Drawing.Point(17, 240);
+            this.SBGNCheckBox.Location = new System.Drawing.Point(17, 235);
             this.SBGNCheckBox.Name = "SBGNCheckBox";
             this.SBGNCheckBox.Size = new System.Drawing.Size(71, 17);
             this.SBGNCheckBox.TabIndex = 23;
@@ -286,11 +289,37 @@ namespace SBML2TikZ_GUI
             this.SBGNCheckBox.UseVisualStyleBackColor = true;
             this.SBGNCheckBox.CheckedChanged += new System.EventHandler(this.SBGNCheckBox_CheckedChanged);
             // 
+            // showOutDirCheckBox
+            // 
+            this.showOutDirCheckBox.AutoSize = true;
+            this.showOutDirCheckBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showOutDirCheckBox.Location = new System.Drawing.Point(17, 258);
+            this.showOutDirCheckBox.Name = "showOutDirCheckBox";
+            this.showOutDirCheckBox.Size = new System.Drawing.Size(102, 17);
+            this.showOutDirCheckBox.TabIndex = 24;
+            this.showOutDirCheckBox.Text = "Show Output Dir";
+            this.showOutDirCheckBox.UseVisualStyleBackColor = true;
+            this.showOutDirCheckBox.CheckedChanged += new System.EventHandler(this.showOutDirCheckBox_CheckedChanged);
+            // 
+            // showPDFCheckBox
+            // 
+            this.showPDFCheckBox.AutoSize = true;
+            this.showPDFCheckBox.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showPDFCheckBox.Location = new System.Drawing.Point(121, 258);
+            this.showPDFCheckBox.Name = "showPDFCheckBox";
+            this.showPDFCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.showPDFCheckBox.TabIndex = 25;
+            this.showPDFCheckBox.Text = "Show PDF";
+            this.showPDFCheckBox.UseVisualStyleBackColor = true;
+            this.showPDFCheckBox.CheckedChanged += new System.EventHandler(this.showPDFCheckBox_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 273);
+            this.ClientSize = new System.Drawing.Size(436, 290);
+            this.Controls.Add(this.showPDFCheckBox);
+            this.Controls.Add(this.showOutDirCheckBox);
             this.Controls.Add(this.SBGNCheckBox);
             this.Controls.Add(this.widthBoxUnits);
             this.Controls.Add(this.heightBoxUnits);
@@ -343,5 +372,7 @@ namespace SBML2TikZ_GUI
         private ListBox heightBoxUnits;
         private ListBox widthBoxUnits;
         private CheckBox SBGNCheckBox;
+        private CheckBox showOutDirCheckBox;
+        private CheckBox showPDFCheckBox;
     }
 }
