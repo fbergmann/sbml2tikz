@@ -67,12 +67,14 @@ namespace SBML2TikZ_GUI
 
         private void heightUnitsChanged(ListBox sender, TextBox target, units newUnit, units oldUnit)
         {
+            if (conv.specs == null) return;
             double value = RenderSpecs.convertLengthUnits(conv.specs.height, newUnit, oldUnit);
             target.Text = Math.Truncate(value).ToString();
         }
 
         private void widthUnitsChanged(ListBox sender, TextBox target, units newUnit, units oldUnit)
         {
+            if (conv.specs == null) return;
             double value = RenderSpecs.convertLengthUnits(conv.specs.width, newUnit, oldUnit);
             target.Text = Math.Truncate(value).ToString();
         }
