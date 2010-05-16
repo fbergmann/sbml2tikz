@@ -1,5 +1,0 @@
-C:\Users\Si Yuan\Documents\Visual Studio 2008\Projects\SBML2TikZ\trunk\thirdparty\SBML2TikZ.dll
-C:\Users\Si Yuan\Documents\Visual Studio 2008\Projects\SBML2TikZ\trunk\thirdparty\SBML2TikZ.pdb
-C:\Users\Si Yuan\Documents\Visual Studio 2008\Projects\SBML2TikZ\trunk\libSBML2TikZ\obj\Release\ResolveAssemblyReference.cache
-C:\Users\Si Yuan\Documents\Visual Studio 2008\Projects\SBML2TikZ\trunk\libSBML2TikZ\obj\Release\SBML2TikZ.dll
-C:\Users\Si Yuan\Documents\Visual Studio 2008\Projects\SBML2TikZ\trunk\libSBML2TikZ\obj\Release\SBML2TikZ.pdb
