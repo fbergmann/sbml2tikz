@@ -43,11 +43,25 @@ namespace SBML2TikZ
             ReadFromSBML(filename, false);
         }
 
-        // convenience method for obtaining a TikZ document; executes all the necessary methods in the right order
+        // convenience methods for obtaining a TikZ document; executes all the necessary methods in the right order
         public static string ToTex(string filename)
         {
             Converter conv = new Converter(filename);
-            return conv.ToTex(conv.layout);
+            return conv.WriteFromLayout();
+        }
+
+        public static string ToTeX(string filename, Boolean useSBGN)
+        {
+            Converter conv = new Converter();
+            conv.ReadFromSBML(filename, useSBGN);
+            return conv.WriteFromLayout();
+        }
+
+        public static string ToTeX(string filename, int selectedLayoutNum, Boolean useSBGN)
+        {
+            Converter conv = new Converter();
+            conv.ReadFromSBML(filename, useSBGN);
+            return conv.WriteFromLayout(selectedLayoutNum);
         }
 
         public void ReadFromSBML(string filename, Boolean useSBGN)
