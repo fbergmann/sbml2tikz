@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RenderExt2TikZ")]
+[assembly: AssemblyTitle("SBML2TikZ_GUI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("University of Washington")]
-[assembly: AssemblyProduct("RenderExt2TikZ")]
+[assembly: AssemblyProduct("SBML2TikZ_GUI")]
 [assembly: AssemblyCopyright("Copyright © University of Washington 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
