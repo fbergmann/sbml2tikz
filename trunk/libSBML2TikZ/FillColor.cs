@@ -290,8 +290,8 @@ namespace SBML2TikZ
             Color firstcol = fillcolor.colorList[0];
 
             writer.Write("\\pgfdeclareradialshading {{{4}}} {{\\pgfpoint{{{0}pt}}{{{1}pt}}}} {{color({2}pt)=({3})",
-                fillcolor.focalPoint.X - 50, //50% is center
-                fillcolor.focalPoint.Y - 50,
+                (fillcolor.focalPoint.X-50) * gradLength/100f , //50% is center
+                (50 - fillcolor.focalPoint.Y) * gradLength / 100f,
                 fillcolor.positionList[0] * gradLength / 100f,
                 "color0!" + AlphaValTex(firstcol),
                 assignedName);
