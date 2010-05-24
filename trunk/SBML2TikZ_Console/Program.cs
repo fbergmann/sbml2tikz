@@ -4,31 +4,34 @@ using SBML2TikZ;
 
 namespace SBML2TikZ_Console
 {
-    class Program
+    class RunConsole
     {
         static void Main(string[] args)
         {
-            if (args.Length < 1 || args.Length > 2)
+            if (args.Length < 2 || args[0].ToLower().Equals("help"))
             {
-                Console.WriteLine("Pass one or two arguments; the name of the SBML file and optionally, the output .tex file name");
-                Environment.Exit(-1);
-            }
-
-            string fileName = args[0];
-            Converter conv = new Converter(fileName);
-            string outputFileName;
-            if (args.Length == 1)
-            {
-                outputFileName = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + ".tex");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("SBML2TikZ generates TeX macros for PGF/TikZ that draw render extension data in SBML files.");
+                Console.WriteLine("SBML2TikZ requires at least 2 input arguments:");
+                Console.WriteLine("SBML2TikZ <SBML filename> <output filename>");
+                Console.WriteLine();
+                Console.WriteLine("Optional arguments following the default arguments include:");
+                Console.WriteLine("-pdflatex: compiles the TeX macros using pdfLaTeX.");
+                Console.WriteLine();
+                Console.WriteLine();
             }
             else
             {
-                outputFileName = args[1];
-            }
+                string fileName = args[0];
+                string outputFileName = args[1];
+                outputFileName = Path.GetFileNameWithoutExtension(outputFileName) + ".tex";
+                Converter conv = new Converter(fileName);
 
-            using (StreamWriter writer = new StreamWriter(outputFileName))
-            {
-                writer.WriteLine(conv.WriteFromLayout());
+                using (StreamWriter writer = new StreamWriter(outputFileName))
+                {
+                    writer.WriteLine(conv.WriteFromLayout());
+                }
             }
         }
     }
