@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
 
-// This is merely a testing unit for the library. The final version will not carry this file; it will be cleaned 
-// up and compiled as a console application.
+// This class was originally used to test the library and is now obsolete.
 namespace SBML2TikZ
 {
     class Program
