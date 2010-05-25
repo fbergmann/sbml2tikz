@@ -178,13 +178,13 @@ namespace SBML2TikZ_GUI
                     }
                     if (compileWithPdflatex)
                     {
-                        compiletolatex(filename);
+                        compiletoPDF(filename);
                     }
                 }
             }
         }
 
-        private void compiletolatex(string texfilename)
+        private void compiletoPDF(string texfilename)
         {
             Boolean errorflag = false;
             // this is the file we want to generate with pdflatex
@@ -256,9 +256,9 @@ namespace SBML2TikZ_GUI
             Hashtable fontTexTable = new Hashtable();
             try
             {
-                foreach (string key in ConfigurationSettings.AppSettings.AllKeys)
+                foreach (string key in ConfigurationManager.AppSettings.AllKeys)
                 {
-                    fontTexTable.Add(key, ConfigurationSettings.AppSettings[key]);
+                    fontTexTable.Add(key, ConfigurationManager.AppSettings[key]);
                 }
             }
             catch

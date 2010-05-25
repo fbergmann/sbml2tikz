@@ -25,6 +25,7 @@ namespace SBML2TikZ_Console
             {
                 string fileName = args[0];
                 string outputFileName = args[1];
+
                 outputFileName = Path.GetFileNameWithoutExtension(outputFileName) + ".tex";
                 Converter conv = new Converter(fileName);
 
@@ -32,6 +33,7 @@ namespace SBML2TikZ_Console
                 {
                     writer.WriteLine(conv.WriteFromLayout());
                 }
+
             }
         }
     }

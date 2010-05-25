@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.CodeDom.Compiler; 
 using System.Collections;
+using System.Diagnostics;
 using SBMLExtension.LayoutExtension;
 using SBMLExtension.EmlRenderExtension;
 
@@ -15,8 +16,8 @@ namespace SBML2TikZ
         private string _SBML;
         public string SBML
         {
-            get{ return _SBML;}
-            set{_SBML = value;}
+            get { return _SBML; }
+            set { _SBML = value; }
         }
         private Layout _layout;
         public Layout layout
@@ -38,7 +39,8 @@ namespace SBML2TikZ
             setDefaultFontTexTable();
         }
 
-        public Converter(string filename):this()
+        public Converter(string filename)
+            : this()
         {
             ReadFromSBML(filename, false);
         }
@@ -62,6 +64,63 @@ namespace SBML2TikZ
             Converter conv = new Converter();
             conv.ReadFromSBML(filename, useSBGN);
             return conv.WriteFromLayout(selectedLayoutNum);
+        }
+
+        public static byte[] ToPDF(string filename)
+        {
+            string TikZstrings = Converter.ToTex(filename);
+            //Create a temp directory to generate the pdf and tex files
+            string tempDir = (Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+            Directory.CreateDirectory(tempDir);
+
+            string TeXfilename = tempDir + "\\"+ Path.GetFileNameWithoutExtension(filename) + ".tex";
+            string PDFfilename = tempDir + "\\"+Path.GetFileNameWithoutExtension(filename) + ".pdf";
+
+            // write TikZstrings into TeXfilename
+            using (StreamWriter writer = new StreamWriter(TeXfilename))
+            {
+                writer.WriteLine(TikZstrings);
+            }
+
+            //Now convert the TeX file to PDF
+            Boolean compiled;
+            compiletoPDF(out compiled, TeXfilename);
+
+            //if the compilation was successful, we convert the PDF to a byte buffer
+            if (compiled)
+            {
+                byte[] PDFdata = File.ReadAllBytes(PDFfilename);
+                //delete the tempDir 
+                Directory.Delete(tempDir, true);
+                return PDFdata;
+            }
+            Directory.Delete(tempDir, true);
+            return new byte[]{}; //return an empty array
+        }
+
+        //generates a pdf file given the path to an existing tex file using PDFLaTeX
+        //compiled shows whether the compilation by PDFLaTeX was successful
+        public static void compiletoPDF(out Boolean compiled, string texfilename)
+        {
+            compiled = true;
+            try
+            {
+                string oldDir = Directory.GetCurrentDirectory();
+                ProcessStartInfo pdfLaTeXinfo = new ProcessStartInfo();
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(texfilename));
+
+                pdfLaTeXinfo.Arguments = Path.GetFileName(texfilename);
+                pdfLaTeXinfo.FileName = "pdflatex";
+                
+                Process p = Process.Start(pdfLaTeXinfo);
+                p.WaitForExit();
+                p.Close();
+                Directory.SetCurrentDirectory(oldDir);
+            }
+            catch
+            {
+                compiled = false;
+            }
         }
 
         public void ReadFromSBML(string filename, Boolean useSBGN)
@@ -89,13 +148,13 @@ namespace SBML2TikZ
         {
             if (layout != null && layoutNum < SBMLExtension.Util.Layouts.Count)
             {
-                    Layout selectedLayout = SBMLExtension.Util.Layouts[layoutNum];
-                    if (selectedLayout != null)
-                    {
-                        return ToTex(selectedLayout);
-                    }
+                Layout selectedLayout = SBMLExtension.Util.Layouts[layoutNum];
+                if (selectedLayout != null)
+                {
+                    return ToTex(selectedLayout);
                 }
-                return "There is no layout loaded.";
+            }
+            return "There is no layout loaded.";
         }
 
         public string ToTex(Layout selectedLayout)
@@ -127,9 +186,9 @@ namespace SBML2TikZ
                 writer.WriteLine("\\pagestyle{empty}");
                 writer.WriteLine("\\begin{document}");
                 writer.WriteLine("\\begin{center}");
-                writer.WriteLine("\\begin{{tikzpicture}}[xscale = {0}, yscale = -{1}]", xscale, yscale); 
+                writer.WriteLine("\\begin{{tikzpicture}}[xscale = {0}, yscale = -{1}]", xscale, yscale);
                 writer.WriteLine("{");
-    
+
 
                 // _layout._EmlRenderInformation is a list of LocalRenderInformation
                 // Each LocalRenderInformation has lists of GradientDefinitions, ColorDefinitions & LineEndings 
@@ -186,7 +245,7 @@ namespace SBML2TikZ
             if (style != null)
             {
                 Group group = style.Group;
-                group.ToTex(glyph, writer, g, selectedLayout._EmlRenderInformation[0], group, refbounds, text_scale, _fontTeXTable); 
+                group.ToTex(glyph, writer, g, selectedLayout._EmlRenderInformation[0], group, refbounds, text_scale, _fontTeXTable);
             }
         }
 
