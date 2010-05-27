@@ -36,13 +36,53 @@ namespace SBML2TikZ
 
         public Converter()
         {
+            specs = new RenderSpecs();
             setDefaultFontTexTable();
         }
 
         public Converter(string filename)
+            : this(filename, false)
+        {
+        }
+
+        public Converter(string filename, bool useSBGN)
             : this()
         {
-            ReadFromSBML(filename, false);
+            ReadFromSBML(filename, useSBGN);
+        }
+
+
+
+        public Converter(Layout layout) : this()
+        {
+            ReadFromLayout(layout);
+        }
+
+        public static Converter FromFile(string fileName)
+        {
+            return FromFile(fileName, false);
+        }
+
+        public static Converter FromFile(string fileName, bool useSBGN)
+        {
+            return new Converter(fileName, useSBGN);
+        }
+
+        public static Converter FromSBMLContent(string sbmlContent)
+        {
+            return FromSBMLContent(sbmlContent, false);
+        }
+
+        public static Converter FromSBMLContent(string sbmlContent, bool useSBGN)
+        {
+            var converter = new Converter();
+            converter.ReadFromSBMLString(sbmlContent, useSBGN);
+            return converter;
+        }
+
+        public static Converter FromLayout(Layout layout)
+        {
+            return new Converter(layout);
         }
 
         // convenience methods for obtaining a TikZ document; executes all the necessary methods in the right order
@@ -66,15 +106,26 @@ namespace SBML2TikZ
             return conv.WriteFromLayout(selectedLayoutNum);
         }
 
-        public static byte[] ToPDF(string filename)
+        public string ToTeX()
         {
-            string TikZstrings = Converter.ToTex(filename);
+            return WriteFromLayout();
+        }
+
+        public byte[] ToPDF()
+        {
+            var tikzString = ToTeX();
+            return CompileTikZToPDF(tikzString);
+        }
+
+        private static byte[] CompileTikZToPDF(string TikZstrings)
+        {
             //Create a temp directory to generate the pdf and tex files
             string tempDir = (Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
             Directory.CreateDirectory(tempDir);
 
-            string TeXfilename = tempDir + "\\"+ Path.GetFileNameWithoutExtension(filename) + ".tex";
-            string PDFfilename = tempDir + "\\"+Path.GetFileNameWithoutExtension(filename) + ".pdf";
+            string tempFileName = Path.GetRandomFileName();
+            string TeXfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".tex";
+            string PDFfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".pdf";
 
             // write TikZstrings into TeXfilename
             using (StreamWriter writer = new StreamWriter(TeXfilename))
@@ -90,12 +141,18 @@ namespace SBML2TikZ
             if (compiled)
             {
                 byte[] PDFdata = File.ReadAllBytes(PDFfilename);
-                //delete the tempDir 
+                //delete the tempDir
                 Directory.Delete(tempDir, true);
                 return PDFdata;
             }
             Directory.Delete(tempDir, true);
-            return new byte[]{}; //return an empty array
+            return new byte[] { }; //return an empty array
+        }
+        public static byte[] ToPDF(string filename)
+        {
+            string TikZstrings = Converter.ToTex(filename);
+
+            return CompileTikZToPDF(TikZstrings);
         }
 
         //generates a pdf file given the path to an existing tex file using PDFLaTeX
@@ -107,6 +164,8 @@ namespace SBML2TikZ
             {
                 string oldDir = Directory.GetCurrentDirectory();
                 ProcessStartInfo pdfLaTeXinfo = new ProcessStartInfo();
+                pdfLaTeXinfo.CreateNoWindow = true;
+                pdfLaTeXinfo.UseShellExecute = false;
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(texfilename));
 
                 pdfLaTeXinfo.Arguments = Path.GetFileName(texfilename);
@@ -117,8 +176,10 @@ namespace SBML2TikZ
                 p.Close();
                 Directory.SetCurrentDirectory(oldDir);
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.StackTrace);
                 compiled = false;
             }
         }
@@ -127,14 +188,35 @@ namespace SBML2TikZ
         {
             if (File.Exists(filename))
             {
-                _SBML = File.ReadAllText(filename);
-                Layout.ReplaceLayoutWithSBGNDefault = useSBGN;
-                _layout = SBMLExtension.Util.readLayout(_SBML); //default use the first layout
-                specs = new RenderSpecs(_layout);
+                string sbmlContent = File.ReadAllText(filename);
+                ReadFromSBMLString(sbmlContent, useSBGN);
                 SBMLExtension.Util.CurrentDirectory = Path.GetDirectoryName(filename);
             }
         }
 
+        /// <summary>
+        /// Added A similar version of the above method that operates on the content of an SBML file (i.e.: the raw SBML)
+        /// </summary>
+        /// <param name="sbmlContent">the raw SBML (xml)</param>
+        /// <param name="useSBGN">boolean indicating whether the layout should be replaced by SBGN default</param>
+        public void ReadFromSBMLString(string sbmlContent, Boolean useSBGN)
+        {
+            _SBML = sbmlContent;
+            Layout.ReplaceLayoutWithSBGNDefault = useSBGN;
+            Layout layout = SBMLExtension.Util.readLayout(_SBML);
+            ReadFromLayout(layout);
+        }
+
+        /// <summary>
+        /// Added a version that initializes from a layout object
+        /// </summary>
+        /// <param name="layout">a laout object to initialize from</param>
+        public void ReadFromLayout(Layout layout)
+        {
+            _layout = layout; //default use the first layout
+            specs = new RenderSpecs(_layout);
+        }
+        //TODO: what is the purpose of this method, why not use ToTex()
         public string WriteFromLayout() // renders the first layout
         {
             if (layout != null)
@@ -172,37 +254,40 @@ namespace SBML2TikZ
 
         private void WriteTo(IndentedTextWriter writer, Layout selectedLayout)
         {
-            if (selectedLayout != null && selectedLayout.hasLayout())
+            if (selectedLayout == null || !selectedLayout.hasLayout())
+                return;
+
+            double xscale = specs.desiredWidth / selectedLayout.Dimensions.Width;
+            double yscale = specs.desiredHeight / selectedLayout.Dimensions.Height;
+            double scale = Math.Min(xscale, yscale);
+            string papersize = Enum.GetName(typeof(papersize), specs.size);
+            string orientation = specs.desiredWidth > specs.desiredHeight ? "landscape" : "portrait";
+            writer.WriteLine("\\documentclass{article}");
+            writer.WriteLine("\\usepackage{tikz}");
+            writer.WriteLine("\\usepackage{pgf}");
+            writer.WriteLine("\\usepackage[total={{{0}pt,{1}pt}}, centering, {2}, {3}]{{geometry}}", specs.desiredWidth, specs.desiredHeight, papersize, orientation);
+            writer.WriteLine("\\pagestyle{empty}");
+            writer.WriteLine("\\begin{document}");
+            writer.WriteLine("\\begin{center}");
+            writer.WriteLine("\\begin{{tikzpicture}}[xscale = {0}, yscale = -{1}]", xscale, yscale);
+            writer.WriteLine("{");
+
+
+            // _layout._EmlRenderInformation is a list of LocalRenderInformation
+            // Each LocalRenderInformation has lists of GradientDefinitions, ColorDefinitions & LineEndings 
+            // It also contains a list of Styles
+            // Each Style can be applied to items that share a role with its rolelist or a type with its typelist
+            // Presently we do not need to worry about GlobalRenderInformation as it is dealt with by the 
+            // RenderInformation.GetStyleForObject, although this may be revised
+
+            // if there are more than one renderinformation objects, we need to ask the user to pick one
+
+            // in order to use some of the classes in the EmlRenderExtension we need a Graphics object
+            var dummyControl = new Control();               
+            try
             {
-                double xscale = specs.desiredWidth / selectedLayout.Dimensions.Width;
-                double yscale = specs.desiredHeight / selectedLayout.Dimensions.Height;
-                double scale = Math.Min(xscale, yscale);
-                string papersize = Enum.GetName(typeof(papersize), specs.size);
-                string orientation = specs.desiredWidth > specs.desiredHeight ? "landscape" : "portrait";
-                writer.WriteLine("\\documentclass{article}");
-                writer.WriteLine("\\usepackage{tikz}");
-                writer.WriteLine("\\usepackage{pgf}");
-                writer.WriteLine("\\usepackage[total={{{0}pt,{1}pt}}, centering, {2}, {3}]{{geometry}}", specs.desiredWidth, specs.desiredHeight, papersize, orientation);
-                writer.WriteLine("\\pagestyle{empty}");
-                writer.WriteLine("\\begin{document}");
-                writer.WriteLine("\\begin{center}");
-                writer.WriteLine("\\begin{{tikzpicture}}[xscale = {0}, yscale = -{1}]", xscale, yscale);
-                writer.WriteLine("{");
+                var g = dummyControl.CreateGraphics();
 
-
-                // _layout._EmlRenderInformation is a list of LocalRenderInformation
-                // Each LocalRenderInformation has lists of GradientDefinitions, ColorDefinitions & LineEndings 
-                // It also contains a list of Styles
-                // Each Style can be applied to items that share a role with its rolelist or a type with its typelist
-                // Presently we do not need to worry about GlobalRenderInformation as it is dealt with by the 
-                // RenderInformation.GetStyleForObject, although this may be revised
-
-                // if there are more than one renderinformation objects, we need to ask the user to pick one
-
-                // in order to use some of the classes in the EmlRenderExtension we need a Graphics object
-                Control dummy_control = new Control();
-                Graphics g = dummy_control.CreateGraphics();
-                dummy_control.Dispose();
 
                 DefineColorsAndGradients(selectedLayout._EmlRenderInformation[0].ColorDefinitions, selectedLayout._EmlRenderInformation[0].GradientDefinitions, selectedLayout._EmlRenderInformation[0], writer);
 
@@ -235,6 +320,13 @@ namespace SBML2TikZ
                 writer.WriteLine("\\end{tikzpicture}");
                 writer.WriteLine("\\end{center}");
                 writer.WriteLine("\\end{document}");
+            }
+            finally
+            {
+                //TODO: you are creating a control, to obtain a graphics handle, but then dispose the control, 
+                //      so this handle is invalid!
+                dummyControl.Dispose();
+
             }
         }
 

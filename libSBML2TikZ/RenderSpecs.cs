@@ -110,6 +110,15 @@ namespace SBML2TikZ
             _size = findOptimalSize(_desiredHeight, units.pts, _desiredWidth, units.pts);
         }
 
+        /// <summary>
+        /// Added default constructor ... 
+        /// TODO: add sensible default values, I think an empty Layout will work for now
+        /// </summary>
+        public RenderSpecs() : this (new Layout())
+        {
+            
+        }
+
         public void setDimensions(double h, double w, units hunits, units wunits)
         {
             _desiredHeight = h;
