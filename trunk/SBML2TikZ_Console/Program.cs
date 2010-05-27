@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using SBML2TikZ;
 
@@ -26,12 +27,24 @@ namespace SBML2TikZ_Console
                 string fileName = args[0];
                 string outputFileName = args[1];
 
+                
+
                 outputFileName = Path.GetFileNameWithoutExtension(outputFileName) + ".tex";
                 Converter conv = new Converter(fileName);
 
-                using (StreamWriter writer = new StreamWriter(outputFileName))
+                if ((new List<string>(args)).Contains("-pdflatex"))
                 {
-                    writer.WriteLine(conv.WriteFromLayout());
+                    string pdfFileName = Path.GetFileNameWithoutExtension(outputFileName) + ".pdf";
+
+                    File.WriteAllBytes(pdfFileName, Converter.ToPDF(fileName));
+                }
+                else
+                {
+                    using (StreamWriter writer = new StreamWriter(outputFileName))
+                    {
+                        writer.WriteLine(conv.WriteFromLayout());
+                    }
+
                 }
 
             }
