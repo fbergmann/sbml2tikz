@@ -17,13 +17,19 @@ namespace SBML2TikZ
         public string SBML
         {
             get { return _SBML; }
-            set { _SBML = value; }
+            set { 
+                _SBML = value;
+                ReadFromSBMLString(value);
+            }
         }
         private Layout _layout;
         public Layout layout
         {
             get { return _layout; }
-            set { _layout = value; }
+            set { 
+                _layout = value;
+                ReadFromLayout(value);
+            }
         }
 
         private Hashtable _fontTeXTable;
@@ -184,6 +190,11 @@ namespace SBML2TikZ
             }
         }
 
+        public void ReadFromSBML(string filename)
+        {
+            ReadFromSBML(filename, false);
+        }
+
         public void ReadFromSBML(string filename, Boolean useSBGN)
         {
             if (File.Exists(filename))
@@ -192,6 +203,15 @@ namespace SBML2TikZ
                 ReadFromSBMLString(sbmlContent, useSBGN);
                 SBMLExtension.Util.CurrentDirectory = Path.GetDirectoryName(filename);
             }
+        }
+
+        /// <summary>
+        /// Added A similar version of the above method that operates on the content of an SBML file (i.e.: the raw SBML)
+        /// </summary>
+        /// <param name="sbmlContent">the raw SBML (xml)</param>
+        public void ReadFromSBMLString(string sbmlContent)
+        {
+            ReadFromSBMLString(sbmlContent, false);
         }
 
         /// <summary>
