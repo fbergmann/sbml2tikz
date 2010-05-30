@@ -11,6 +11,13 @@ using SBMLExtension.EmlRenderExtension;
 
 namespace SBML2TikZ
 {
+    /// <summary>
+    /// The Converter class converts rendering 
+    /// information in an SBML file, the Layout 
+    /// from an SBML file, or the string contents 
+    /// of an SBML file and generates a string 
+    /// of arguments in PGF/TikZ.
+    /// </summary>
     public class Converter
     {
         private string _SBML;
@@ -40,71 +47,186 @@ namespace SBML2TikZ
 
         public RenderSpecs specs;
 
+        /// <summary>
+        /// Initializes a new instance of the <c>Converter</c> class. 
+        /// </summary>
         public Converter()
         {
             specs = new RenderSpecs();
             setDefaultFontTexTable();
         }
-
+        /// <summary>
+        /// Initializes a new instance of the 
+        /// <c>Converter</c> class with 
+        /// <c>RenderSpecs</c> & <c>Layout</c> 
+        /// for the file in the path passed. 
+        /// </summary>
+        /// <param name="filename">string 
+        /// indicating path of the SBML file</param>
         public Converter(string filename)
             : this(filename, false)
         {
         }
-
+        /// <summary>
+        /// Initializes a new instance of the 
+        /// <c>Converter</c> class with 
+        /// <c>RenderSpecs</c> & <c>Layout</c> 
+        /// for the file in the path passed. 
+        /// The <c>Layout</c> may be overwritten 
+        /// with SBGN.
+        /// </summary>
+        /// <param name="filename">string indicating 
+        /// path of the SBML file</param>
+        /// <param name="useSBGN">boolean indicating 
+        /// whether the layout should be replaced by SBGN default</param>
         public Converter(string filename, bool useSBGN)
             : this()
         {
             ReadFromSBML(filename, useSBGN);
         }
-
-
-
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <c>Converter</c> class with the 
+        /// <c>Layout</c> passed and a 
+        /// <c>RenderSpecs</c> initialized for that 
+        /// <c>Layout</c>
+        /// </summary>
+        /// <param name="layout">Layout (presumably 
+        /// read from some SBML file) to be converted 
+        /// to PGF/TikZ</param>
         public Converter(Layout layout) : this()
         {
             ReadFromLayout(layout);
         }
 
+        /// <summary>
+        ///  Returns a <c>Converter</c> object
+        ///  with <c>Layout</c> and 
+        ///  <c>RenderSpecs</c> for the file in the 
+        ///  path passed.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns><c>Converter</c> with a 
+        /// <c>Layout</c> and <c>RenderSpecs</c>
+        /// </returns>
         public static Converter FromFile(string fileName)
         {
             return FromFile(fileName, false);
         }
-
+        /// <summary>
+        /// Returns a <c>Converter</c> object with 
+        /// <c>Layout</c> and <c>RenderSpecs</c> for 
+        /// the file in the path passed. The <c>Layout</c> 
+        /// may be overwritten with SBGN.
+        /// </summary>
+        /// <param name="fileName">string indicating 
+        /// path of the SBML file</param>
+        /// <param name="useSBGN">boolean indicating
+        /// whether the layout should be replaced by 
+        /// SBGN default</param>
+        /// <returns><c>Converter</c> with a <c>Layout</c> 
+        /// and <c>RenderSpecs</c></returns>
         public static Converter FromFile(string fileName, bool useSBGN)
         {
             return new Converter(fileName, useSBGN);
         }
-
+        /// <summary>
+        /// Returns a <c>Converter</c> object with 
+        /// <c>Layout</c> and <c>RenderSpecs</c> 
+        /// for the SBML string passed.
+        /// </summary>
+        /// <param name="sbmlContent">string of 
+        /// SBML file contents</param>
+        /// <returns><c>Converter</c> with a 
+        /// <c>Layout</c> and <c>RenderSpecs</c>
+        /// </returns>
         public static Converter FromSBMLContent(string sbmlContent)
         {
             return FromSBMLContent(sbmlContent, false);
         }
-
+        /// <summary>
+        /// Returns a <c>Converter</c> object with
+        /// <c>Layout</c> and <c>RenderSpecs</c> 
+        /// for the SBML string passed. The 
+        /// <c>Layout</c> may be overwritten with SBGN. 
+        /// </summary>
+        /// <param name="sbmlContent">stroring of 
+        /// SBML file contents</param>
+        /// <param name="useSBGN">boolean indicating 
+        /// whether the layout should be replaced by 
+        /// SBGN default</param>
+        /// <returns><c>Converter</c> with a 
+        /// <c>Layout</c> and <c>RenderSpecs</c>
+        /// </returns>
         public static Converter FromSBMLContent(string sbmlContent, bool useSBGN)
         {
             var converter = new Converter();
             converter.ReadFromSBMLString(sbmlContent, useSBGN);
             return converter;
         }
-
+        /// <summary>
+        /// Returns a <c>Converter</c> object with 
+        /// <c>Layout</c> and <c>RenderSpecs</c> for 
+        /// the <c>Layout</c> passed.
+        /// </summary>
+        /// <param name="layout">Layout from an SBML 
+        /// file</param>
+        /// <returns><c>Converter</c> with a 
+        /// <c>Layout</c> and <c>RenderSpecs</c>
+        /// </returns>
         public static Converter FromLayout(Layout layout)
         {
             return new Converter(layout);
         }
 
-        // convenience methods for obtaining a TikZ document; executes all the necessary methods in the right order
+        /// <summary>
+        /// Convenience method for obtaining a PGF/TikZ 
+        /// document. Returns a string of PGF/TikZ that 
+        /// draws the first set of rendering information 
+        /// in the SBML file of the path passed.
+        /// </summary>
+        /// <param name="filename">string indicating path 
+        /// of the SBML file</param>
+        /// <returns>string of PGF/TikZ commands</returns>
         public static string ToTex(string filename)
         {
             Converter conv = new Converter(filename);
             return conv.WriteFromLayout();
         }
-
+        /// <summary>
+        /// Convenience method for obtaining a PGF/TikZ
+        /// document. Returns a string of PGF/TikZ that
+        /// draws the first set of rendering information
+        /// in the SBML file of the path passed. The 
+        /// rendering may be replaced with SBGN default.
+        /// </summary>
+        /// <param name="filename">string indicating 
+        /// path of the SBML file</param>
+        /// <param name="useSBGN">boolean indicating
+        /// whether the layout should be replaced by 
+        /// SBGN default</param>
+        /// <returns>string of PGF/TikZ commands</returns>
         public static string ToTeX(string filename, Boolean useSBGN)
         {
             Converter conv = new Converter();
             conv.ReadFromSBML(filename, useSBGN);
             return conv.WriteFromLayout();
         }
-
+        /// <summary>
+        /// Convenience method for obtaining a PGF/TikZ
+        /// document. Returns a string of PGF/TikZ that
+        /// draws the a set of rendering information
+        /// in the SBML file of the path passed. The 
+        /// rendering may be replaced with SBGN default.
+        /// </summary>
+        /// <param name="filename">string indicating
+        /// path of the SBML file</param>
+        /// <param name="selectedLayoutNum">int indicating
+        /// which set of rendering information to use</param>
+        /// <param name="useSBGN">boolean indicating 
+        /// whether the layout should be replaced by 
+        /// SBGN default</param>
+        /// <returns></returns>
         public static string ToTeX(string filename, int selectedLayoutNum, Boolean useSBGN)
         {
             Converter conv = new Converter();
@@ -112,14 +234,22 @@ namespace SBML2TikZ
             return conv.WriteFromLayout(selectedLayoutNum);
         }
 
-        public string ToTeX()
-        {
-            return WriteFromLayout();
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public string ToTeX()
+        //{
+        //    if (layout != null)
+        //    {
+        //        return ToTex(layout);
+        //    }
+        //    return "There is no layout loaded.";
+        //}
 
         public byte[] ToPDF()
         {
-            var tikzString = ToTeX();
+            var tikzString = WriteFromLayout();
             return CompileTikZToPDF(tikzString);
         }
 
@@ -130,8 +260,10 @@ namespace SBML2TikZ
             Directory.CreateDirectory(tempDir);
 
             string tempFileName = Path.GetRandomFileName();
-            string TeXfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".tex";
-            string PDFfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".pdf";
+            string TeXfilename = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(tempFileName) + ".tex");
+            string PDFfilename = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(tempFileName) + ".pdf");
+            //string TeXfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".tex";
+            //string PDFfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".pdf";
 
             // write TikZstrings into TeXfilename
             using (StreamWriter writer = new StreamWriter(TeXfilename))
@@ -190,11 +322,28 @@ namespace SBML2TikZ
             }
         }
 
+        /// <summary>
+        /// Updates the <c>Layout</c> of this <c>Converter</c> 
+        /// with the <c>Layout</c> found in the file of 
+        /// the path passed
+        /// </summary>
+        /// <param name="filename">string indicating the path 
+        /// of the SBML file</param>
         public void ReadFromSBML(string filename)
         {
             ReadFromSBML(filename, false);
         }
-
+        /// <summary>
+        /// Updates the <c>Layout</c> of this <c>Converter</c> 
+        /// with the <c>Layout</c> found in the file of 
+        /// the path passed. May overwrite the <c>Layout</c> 
+        /// with SBGN default.
+        /// </summary>
+        /// <param name="filename">string indicating the path
+        /// of the SBML file</param>
+        /// <param name="useSBGN">boolean indicating whether
+        /// the Layout should be replaced with SBGN default
+        /// </param>
         public void ReadFromSBML(string filename, Boolean useSBGN)
         {
             if (File.Exists(filename))
@@ -204,7 +353,6 @@ namespace SBML2TikZ
                 SBMLExtension.Util.CurrentDirectory = Path.GetDirectoryName(filename);
             }
         }
-
         /// <summary>
         /// Added A similar version of the above method that operates on the content of an SBML file (i.e.: the raw SBML)
         /// </summary>
@@ -213,9 +361,8 @@ namespace SBML2TikZ
         {
             ReadFromSBMLString(sbmlContent, false);
         }
-
         /// <summary>
-        /// Added A similar version of the above method that operates on the content of an SBML file (i.e.: the raw SBML)
+        /// Added a similar version of the above method that operates on the content of an SBML file (i.e.: the raw SBML)
         /// </summary>
         /// <param name="sbmlContent">the raw SBML (xml)</param>
         /// <param name="useSBGN">boolean indicating whether the layout should be replaced by SBGN default</param>
@@ -226,7 +373,6 @@ namespace SBML2TikZ
             Layout layout = SBMLExtension.Util.readLayout(_SBML);
             ReadFromLayout(layout);
         }
-
         /// <summary>
         /// Added a version that initializes from a layout object
         /// </summary>
@@ -236,7 +382,7 @@ namespace SBML2TikZ
             _layout = layout; //default use the first layout
             specs = new RenderSpecs(_layout);
         }
-        //TODO: what is the purpose of this method, why not use ToTex()
+
         public string WriteFromLayout() // renders the first layout
         {
             if (layout != null)
