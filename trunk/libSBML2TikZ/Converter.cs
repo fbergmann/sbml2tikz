@@ -206,7 +206,7 @@ namespace SBML2TikZ
         /// whether the layout should be replaced by 
         /// SBGN default</param>
         /// <returns>string of PGF/TikZ commands</returns>
-        public static string ToTeX(string filename, Boolean useSBGN)
+        public static string ToTex(string filename, Boolean useSBGN)
         {
             Converter conv = new Converter();
             conv.ReadFromSBML(filename, useSBGN);
@@ -215,7 +215,7 @@ namespace SBML2TikZ
         /// <summary>
         /// Convenience method for obtaining a PGF/TikZ
         /// document. Returns a string of PGF/TikZ that
-        /// draws the a set of rendering information
+        /// draws a specified set of rendering information
         /// in the SBML file of the path passed. The 
         /// rendering may be replaced with SBGN default.
         /// </summary>
@@ -227,7 +227,7 @@ namespace SBML2TikZ
         /// whether the layout should be replaced by 
         /// SBGN default</param>
         /// <returns></returns>
-        public static string ToTeX(string filename, int selectedLayoutNum, Boolean useSBGN)
+        public static string ToTex(string filename, int selectedLayoutNum, Boolean useSBGN)
         {
             Converter conv = new Converter();
             conv.ReadFromSBML(filename, useSBGN);
@@ -286,9 +286,21 @@ namespace SBML2TikZ
             Directory.Delete(tempDir, true);
             return new byte[] { }; //return an empty array
         }
+        /// <summary>
+        /// Generates a PDF byte file from a given SBML file
+        /// </summary>
+        /// <param name="filename">SBML file path</param>
+        /// <returns></returns>
         public static byte[] ToPDF(string filename)
         {
             string TikZstrings = Converter.ToTex(filename);
+
+            return CompileTikZToPDF(TikZstrings);
+        }
+
+        public static byte[] ToPDF(string filename, Boolean useSBGN)
+        {
+            string TikZstrings = Converter.ToTex(filename, useSBGN);
 
             return CompileTikZToPDF(TikZstrings);
         }
