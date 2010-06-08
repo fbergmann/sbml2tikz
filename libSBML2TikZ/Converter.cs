@@ -512,6 +512,11 @@ namespace SBML2TikZ
         {
             Style style = selectedLayout._EmlRenderInformation[0].GetStyleForObject(glyph);
             RectangleF refbounds = new RectangleF(); //refbounds is later set by lineEndings if the glyph is a reactionglyph; this sets the size of endings drawn
+            if (style == null && Layout.GlobalRenderInformation!=null && Layout.GlobalRenderInformation.Count>0)
+            {
+                style = Layout.GlobalRenderInformation[0].GetStyleForObject(glyph);
+            }
+
             if (style != null)
             {
                 Group group = style.Group;
