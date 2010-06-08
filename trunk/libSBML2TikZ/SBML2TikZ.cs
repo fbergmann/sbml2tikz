@@ -32,12 +32,12 @@ namespace SBML2TikZ
             ////}
 
             ////string fileName = "C:\\Users\\Si Yuan\\Desktop\\testcases\\CaMK-Activation.xml";
-            //string fileName = "C:\\Users\\Si Yuan\\Documents\\SBML Models\\color.xml"; ;
+            //string fileName = "C:\\Users\\Si Yuan\\Desktop\\testsam.xml"; ;
             ////string curDir = Directory.GetCurrentDirectory();
             ////string fontdatafile = curDir + "\\Fonts.txt";
 
             //Converter conv = new Converter(fileName);
-            //string outputFileName = "C:\\Users\\Si Yuan\\Desktop\\testresults\\test.tex";
+            //string outputFileName = "C:\\Users\\Si Yuan\\Desktop\\testsam.tex";
             //using (StreamWriter writer = new StreamWriter(outputFileName))
             //{
             //    writer.WriteLine(conv.WriteFromLayout());
