@@ -36,7 +36,7 @@ namespace SBML2TikZ_Console
             else
             {
                 ////commented args below is for testing purposes
-                //args = new string[]{"C:\\Users\\Si Yuan\\Documents\\SBML Models\\BorisEJB.xml", "C:\\Users\\Si Yuan\\Desktop\\testresults\\BorisEJB.tex", "-UseSBGN", "-dimensions{400pts,300pts}"};
+                //args = new string[] { "C:\\Users\\Si Yuan\\Documents\\SBML Models\\color.xml", "C:\\Users\\Si Yuan\\Desktop\\foo.tex", "-pdflatex"};
                 Converter conv = ConverterFromArgs(args);
                 //string fileName = Path.GetFullPath(args[0]);
                 //string outputFileName = Path.GetFullPath(args[1]);

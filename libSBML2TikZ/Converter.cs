@@ -278,10 +278,20 @@ namespace SBML2TikZ
             //if the compilation was successful, we convert the PDF to a byte buffer
             if (compiled)
             {
-                byte[] PDFdata = File.ReadAllBytes(PDFfilename);
-                //delete the tempDir
-                Directory.Delete(tempDir, true);
-                return PDFdata;
+                try
+                {
+                    byte[] PDFdata = File.ReadAllBytes(PDFfilename);
+                    //delete the tempDir
+                    Directory.Delete(tempDir, true);
+                    return PDFdata;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+                    Directory.Delete(tempDir, true);
+                    return new byte[] { };
+                }
             }
             Directory.Delete(tempDir, true);
             return new byte[] { }; //return an empty array
@@ -318,7 +328,7 @@ namespace SBML2TikZ
                 pdfLaTeXinfo.UseShellExecute = false;
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(texfilename));
 
-                pdfLaTeXinfo.Arguments = Path.GetFileName(texfilename);
+                pdfLaTeXinfo.Arguments = Path.GetFileName(texfilename)+" -interaction nonstopmode";
                 pdfLaTeXinfo.FileName = "pdflatex";
                 
                 Process p = Process.Start(pdfLaTeXinfo);
@@ -401,7 +411,7 @@ namespace SBML2TikZ
             {
                 return ToTex(layout);
             }
-            return "There is no layout loaded.";
+            return "% There is no layout loaded in the specified file or path.";
         }
 
         public string WriteFromLayout(int layoutNum) //renders the specified layout
@@ -414,7 +424,7 @@ namespace SBML2TikZ
                     return ToTex(selectedLayout);
                 }
             }
-            return "There is no layout loaded.";
+            return "% There is no layout loaded in the specified file or path.";
         }
 
         public string ToTex(Layout selectedLayout)
