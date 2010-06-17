@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SBML2TikZ_GUI</RootNamespace>
     <AssemblyName>SBML2TikZ_GUI</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>SBML2TikZ_GUI.RunGUI</StartupObject>
     <FileUpgradeFlags>
@@ -40,9 +40,6 @@
     <Reference Include="OntologyStorage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\thirdparty\OntologyStorage.dll</HintPath>
-    </Reference>
-    <Reference Include="SBML2TikZ">
-      <HintPath>..\thirdparty\SBML2TikZ.dll</HintPath>
     </Reference>
     <Reference Include="SBMLExtension, Version=2.7.3729.19675, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -76,6 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libSBML2TikZ\libSBML2TikZ-vs2008.csproj">
+      <Project>{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}</Project>
+      <Name>libSBML2TikZ-vs2008</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
