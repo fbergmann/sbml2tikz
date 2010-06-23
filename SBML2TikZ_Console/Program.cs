@@ -28,20 +28,23 @@ namespace SBML2TikZ_Console
                 Console.WriteLine("\t The default graph drawn is the first in the model. If the graph requested by the user in -layout{x} is not available, SBML2TikZ draws the first graph.");
                 Console.WriteLine();
                 Console.WriteLine("-dimensions{w,h}: sets the size of the output graph. Use this argument to overwrite the recommended dimensions.");
-                Console.WriteLine("\t Eg. -dimensionpts{400pt,500pt} sets the width to 400 points and the height to 500 points.");
-                Console.WriteLine("\t -dimensions{w,h} accepts pts, cm and inches as input.");
+                Console.WriteLine("Eg. -dimensionpts{400pt,500pt} sets the width to 400 points and the height to 500 points.");
+                Console.WriteLine("-dimensions{w,h} accepts pts, cm and inches as input.");
                 Console.WriteLine();
+                Console.WriteLine("-r: SBML2TikZ generates TeX files for all SBML files in the directory of the input SBML file to the directory of the output SBML file. The -UseSBGN and -pdflatex commands will also be applied to all SBML files in the directory, although parameters for -dimensions and -layout will not be applied");
+                Console.WriteLine("Eg. SBML2TikZ \"C:\\foo\\bar.xml\" \"C:\\foo\\output\\bar.tex\" -UseSBGN -pdflatex -r");
+                Console.WriteLine("generates tex files and pdf files for all SBML files in the C:\foo directory"); 
                 Console.WriteLine();
             }
             else
             {
-                ////commented args below is for testing purposes
-                //args = new string[] { "C:\\Users\\Si Yuan\\Documents\\SBML Models\\color.xml", "C:\\Users\\Si Yuan\\Desktop\\foo.tex", "-pdflatex"};
+                //commented args below is for testing purposes
+                args = new string[] { "C:\\Users\\Si Yuan\\Documents\\SBML Models\\color.xml", "C:\\Users\\Si Yuan\\Desktop\\foo.tex", "-pdflatex", "-r"};
                 Converter conv = ConverterFromArgs(args);
-                //string fileName = Path.GetFullPath(args[0]);
-                //string outputFileName = Path.GetFullPath(args[1]);
                 string fileName = Path.GetFullPath(args[0]);
                 string outputFileName = Path.GetFullPath(args[1]);
+                //string fileName = Path.GetFullPath(args[0]);
+                //string outputFileName = Path.GetFullPath(args[1]);
                 outputFileName = Path.Combine(Path.GetDirectoryName(outputFileName), Path.GetFileNameWithoutExtension(outputFileName) + ".tex");
 
                 if (Array.IndexOf(args, "-pdflatex")>-1)
@@ -55,6 +58,41 @@ namespace SBML2TikZ_Console
                     using (StreamWriter writer = new StreamWriter(outputFileName))
                     {
                         writer.WriteLine(conv.WriteFromLayout());
+                    }
+
+                }
+
+                // if recursive, take all SBML files in the input directory and convert 
+                // them to TeX files or pdf in the output directory
+                if (Array.IndexOf(args, "-r") > -1)
+                {
+                    string inputdir = Path.GetDirectoryName(fileName);
+                    string outputdir = Path.GetDirectoryName(outputFileName);
+
+                    DirectoryInfo indirinfo = new DirectoryInfo(inputdir);
+                    FileInfo[] sbmlfiles = indirinfo.GetFiles("*.xml");
+
+                    // either write directly to PDF or write a TeX file
+                    if (Array.IndexOf(args, "-pdflatex") > -1)
+                    {
+                        for (int ii = 0; ii < sbmlfiles.Length; ii++)
+                        {
+                            string sbmlfilename = sbmlfiles[ii].FullName;
+                            byte[] pdfrendering = Converter.ToPDF(sbmlfilename, Array.IndexOf(args, "-UseSBGN") != -1); // ToPDF(filename, true) is UseSBGN is an argument
+                            string pdffilename = Path.Combine(outputdir, Path.GetFileNameWithoutExtension(sbmlfilename)) + ".pdf";
+                            File.WriteAllBytes(pdffilename, pdfrendering);
+                        }
+                    }
+                    // TeX instead of pdf
+                    else 
+                    {
+                        for (int ii = 0; ii < sbmlfiles.Length; ii++)
+                        {
+                            string sbmlfilename = sbmlfiles[ii].FullName;
+                            string tikzrendering = Converter.ToTex(sbmlfilename, Array.IndexOf(args, "-UseSBGN") != -1); 
+                            string texfilename = Path.Combine(outputdir, Path.GetFileNameWithoutExtension(sbmlfilename)) + ".tex";
+                            File.WriteAllText(texfilename, tikzrendering);
+                        }
                     }
 
                 }
