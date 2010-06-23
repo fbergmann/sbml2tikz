@@ -90,9 +90,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\libSBML2TikZ\libSBML2TikZ.csproj">
       <Project>{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}</Project>
       <Name>libSBML2TikZ</Name>

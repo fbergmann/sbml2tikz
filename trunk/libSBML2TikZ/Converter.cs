@@ -408,7 +408,7 @@ namespace SBML2TikZ
 
         public string WriteFromLayout() // renders the first layout
         {
-            if (layout._EmlRenderInformation.Count != 0)
+            if (layout != null && layout._EmlRenderInformation.Count != 0)
             {
                 return ToTex(layout);
             }
@@ -417,7 +417,7 @@ namespace SBML2TikZ
 
         public string WriteFromLayout(int layoutNum) //renders the specified layout
         {
-            if (layout._EmlRenderInformation.Count != 0 && layoutNum < SBMLExtension.Util.Layouts.Count)
+            if (layout != null && layout._EmlRenderInformation.Count != 0 && layoutNum < SBMLExtension.Util.Layouts.Count)
             {
                 Layout selectedLayout = SBMLExtension.Util.Layouts[layoutNum];
                 if (selectedLayout != null)

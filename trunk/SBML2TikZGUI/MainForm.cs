@@ -38,7 +38,38 @@ namespace SBML2TikZ_GUI
             compileWithPdfLaTeXChange += new compileToPdfChangeHandler(enableShowPDFCheckBox);
             //Complete mainform initialization
             InitializeComponent();
-            InitializeMyComponents(); // sets default values to UserAppDataRegistry values            
+            InitializeMyComponents(); // sets default values to UserAppDataRegistry values 
+            setToolTips();
+        }
+
+        private void setToolTips()
+        {
+            ToolTip tips = new ToolTip();
+            tips.InitialDelay = 0;
+            tips.ReshowDelay = 0;
+            tips.AutoPopDelay = 6000;
+            tips.ShowAlways = true;
+            tips.SetToolTip(load_Button, "Load a new SBML file");
+            tips.SetToolTip(xmlfiledisplay, "The loaded SBML file to be rendered");
+            tips.SetToolTip(desiredHeightBox, "Set the vertical dimensions of the output rendering");
+            tips.SetToolTip(desiredWidthBox, "Set the horizontal dimensions of the output rendering");
+            tips.SetToolTip(dHeightBoxUnits, "The units for the vertical dimensions of the output rendering");
+            tips.SetToolTip(dWidthBoxUnits, "The units for the horizontal dimensions of the output rendering");
+            tips.SetToolTip(heightBox, "The vertical dimensions of the rendering stored in the loaded SBML file");
+            tips.SetToolTip(widthBox, "The horizontal dimensions of the rendering stored in the loaded SBML file");
+            tips.SetToolTip(heightBoxUnits, "Set the units for display of the vertical dimensions of the rendering stored in the loaded SBML file");
+            tips.SetToolTip(widthBoxUnits, "Set the units for display of the horizontal dimensions of the rendering stored in the loaded SBML file");
+            tips.SetToolTip(LayoutSelectionBox, "Select from the available renderings stored in the loaded SBML file");
+            tips.SetToolTip(SBGNCheckBox, "Check this box to overwrite the output rendering with Systems Biology Graphical Notation rendering");
+            tips.SetToolTip(showOutDirCheckBox, "Check this box to have SBML2TikZ display the output path of the rendering file/s");
+            tips.SetToolTip(showPDFCheckBox, "Check this box to have SBML2TikZ open a PDF of the rendering (check this only if Convert To PDF is checked)");
+            tips.SetToolTip(CompileCheckBox, "Check this box to have SBML2TikZ call pdflatex to convert the output PGF/TikZ to PDF");
+            tips.SetToolTip(button1, "Generate a TeX file of PGF/TikZ for the selected layout in the loaded SBML file");
+            tips.SetToolTip(label1, "The vertical dimensions of the output rendering");
+            tips.SetToolTip(label2, "The horizontal dimensions of the output rendering");
+            tips.SetToolTip(label4, "The vertical dimensions of the rendering stored in the loaded SBML file");
+            tips.SetToolTip(label5, "The horizontal dimensions of the rendering stored in the loaded SBML file");
+            tips.SetToolTip(label3, "The selected layout in the loaded SBML file");
         }
 
         private void displayChange(object sender, string name)
