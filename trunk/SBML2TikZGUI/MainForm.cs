@@ -203,7 +203,7 @@ namespace SBML2TikZ_GUI
 
                     if (showOutDir)
                     {
-                        MessageBox.Show(Path.GetFileName(filename) + " has been successfully written to" + Path.GetDirectoryName(filename) + ".",
+                        MessageBox.Show(Path.GetFileName(filename) + " has been successfully written to " + Path.GetDirectoryName(filename) + ".",
                                         "Conversion Successful",
                                         MessageBoxButtons.OK);
                     }
