@@ -352,5 +352,13 @@ namespace SBML2TikZ_GUI
             this.showPDF = showPDFCheckBox.Checked;
         }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string Message = "SBML2TikZ was written by Si Yuan Shen, with help from Herbert M. Sauro and Frank T. Bergmann. This is version " 
+                + this.GetType().Assembly.GetName().Version.ToString() 
+                + ". Additional information including tutorials and source code can be found at http://sbml2tikz.org";
+             MessageBox.Show(Message, "About SBML2TikZ");
+        }
+
     }
 }
