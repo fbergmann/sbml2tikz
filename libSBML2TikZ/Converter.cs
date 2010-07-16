@@ -495,17 +495,17 @@ namespace SBML2TikZ
 
                 DefineColorsAndGradients(selectedLayout._EmlRenderInformation[0].ColorDefinitions, selectedLayout._EmlRenderInformation[0].GradientDefinitions, selectedLayout._EmlRenderInformation[0], writer);
 
+                foreach (var glyph in selectedLayout.CompartmentGlyphs)
+                {
+                    glyphToTex(glyph, selectedLayout, writer, g, scale);
+                }
+
                 foreach (var glyph in selectedLayout.ReactionGlyphs)
                 {
                     glyphToTex(glyph, selectedLayout, writer, g, scale);
                 }
 
                 foreach (var glyph in selectedLayout.SpeciesGlyphs)
-                {
-                    glyphToTex(glyph, selectedLayout, writer, g, scale);
-                }
-
-                foreach (var glyph in selectedLayout.CompartmentGlyphs)
                 {
                     glyphToTex(glyph, selectedLayout, writer, g, scale);
                 }

@@ -803,9 +803,12 @@ namespace SBML2TikZ
                 {
                     float fRadiusX = rectangle.RX.Contains("%") ? ((bound_rectangle.Width * SBMLExtension.Util.readSingle(rectangle.RX)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RX);
                     float fRadiusY = rectangle.RY.Contains("%") ? ((bound_rectangle.Height * SBMLExtension.Util.readSingle(rectangle.RY)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RY);
+                    // In actuality PGF/TikZ does not round with x and y parameters, so we need to fudge
+                    // Also note that PGF/TikZ does not scale rounding
 
+                    float fRadius = (fRadiusX + fRadiusY) / (2f * (float)scale);
                     writer.WriteLine("\\fill[rounded corners = {0}pt, shading = {1}] \\wholeShape;",
-                            fRadiusX, fillcolor.ID);
+                            fRadius, fillcolor.ID);
                 }
             }
             // draw the outline
@@ -837,9 +840,12 @@ namespace SBML2TikZ
                 {
                     float fRadiusX = rectangle.RX.Contains("%") ? ((bound_rectangle.Width * SBMLExtension.Util.readSingle(rectangle.RX)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RX);
                     float fRadiusY = rectangle.RY.Contains("%") ? ((bound_rectangle.Height * SBMLExtension.Util.readSingle(rectangle.RY)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RY);
+                    // In actuality PGF/TikZ does not round with x and y parameters, so we need to fudge
+                    // Also note that PGF/TikZ does not scale rounding
 
+                    float fRadius = (fRadiusX + fRadiusY) / (2f * (float) scale);
                     writer.WriteLine("\\fill[rounded corners = {0}pt, shading = {2}, shading angle = {1} ] \\wholeShape;",
-                            fRadiusX,
+                            fRadius,
                             -180+fillcolor.gradient_rotation,
                             fillcolor.ID);
                 }
@@ -880,9 +886,12 @@ namespace SBML2TikZ
             {
                 float fRadiusX = rectangle.RX.Contains("%") ? ((bound_rectangle.Width * SBMLExtension.Util.readSingle(rectangle.RX)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RX);
                 float fRadiusY = rectangle.RY.Contains("%") ? ((bound_rectangle.Height * SBMLExtension.Util.readSingle(rectangle.RY)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RY);
+                // In actuality PGF/TikZ does not round with x and y parameters, so we need to fudge
+                // Also note that PGF/TikZ does not scale rounding
 
+                float fRadius = (fRadiusX + fRadiusY) / (2f * (float)scale);
                 writer.WriteLine("\\draw[rounded corners = {0}pt, fill = {2}{1}] \\wholeShape;",
-                        fRadiusX,
+                        fRadius,
                         FillColor.AlphaValTex(curSolidColor),
                         solidRef);
             }
@@ -922,11 +931,14 @@ namespace SBML2TikZ
             {
                 float fRadiusX = rectangle.RX.Contains("%") ? ((bound_rectangle.Width * SBMLExtension.Util.readSingle(rectangle.RX)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RX);
                 float fRadiusY = rectangle.RY.Contains("%") ? ((bound_rectangle.Height * SBMLExtension.Util.readSingle(rectangle.RY)) / 100f) : SBMLExtension.Util.readSingle(rectangle.RY);
+                // In actuality PGF/TikZ does not round with x and y parameters, so we need to fudge
+                // Also note that PGF/TikZ does not scale rounding
 
+                float fRadius = (fRadiusX + fRadiusY) / (2f * (float)scale);
                 writer.WriteLine("\\draw[line width = {0}pt, color = {5}{1}, rounded corners = {2}pt {3}] \\{4};",
                     strokewidth,
                     FillColor.AlphaValTex(linecolor),
-                    fRadiusX,
+                    fRadius,
                     dashed,
                     shapename,
                     strokeRef);
