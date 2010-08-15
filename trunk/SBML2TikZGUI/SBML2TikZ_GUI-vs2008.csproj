@@ -72,9 +72,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\libSBML2TikZ\libSBML2TikZ-vs2008.csproj">
       <Project>{07758FD9-D79C-4B65-99DF-FB8A169BC8EE}</Project>
       <Name>libSBML2TikZ-vs2008</Name>
