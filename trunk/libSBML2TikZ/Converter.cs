@@ -316,6 +316,41 @@ namespace SBML2TikZ
             return CompileTikZToPDF(TikZstrings);
         }
 
+        private static string _LatexFileName = "pdflatex";
+
+        /// <summary>
+        /// Gets / Sets the filename of the pdf latex compiler.
+        /// </summary>
+        public static string LatexFileName
+        {
+            get
+            {
+                return _LatexFileName;
+            }
+            set
+            {
+                _LatexFileName = value;
+            }
+        }
+
+        private static string _LatexArguments  =" -interaction nonstopmode";
+        /// <summary>
+        /// Gets / Sets the default arguments used for the compilation mode. 
+        /// By default the converter will invoke the LatexFileName with the 
+        /// tex  file followed by  -interaction nonstopmode
+        /// </summary>
+        public static string LatexArguments
+        {
+            get
+            {
+                return _LatexArguments;
+            }
+            set
+            {
+                _LatexArguments = value;
+            }
+        }
+
         //generates a pdf file given the path to an existing tex file using PDFLaTeX
         //compiled shows whether the compilation by PDFLaTeX was successful
         public static void compiletoPDF(out Boolean compiled, string texfilename)
@@ -329,8 +364,8 @@ namespace SBML2TikZ
                 pdfLaTeXinfo.UseShellExecute = false;
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(texfilename));
 
-                pdfLaTeXinfo.Arguments = Path.GetFileName(texfilename)+" -interaction nonstopmode";
-                pdfLaTeXinfo.FileName = "pdflatex";
+                pdfLaTeXinfo.Arguments = Path.GetFileName(texfilename)+" "  + LatexArguments;
+                pdfLaTeXinfo.FileName = LatexFileName;
                 
                 Process p = Process.Start(pdfLaTeXinfo);
                 p.WaitForExit();
@@ -392,8 +427,7 @@ namespace SBML2TikZ
         public void ReadFromSBMLString(string sbmlContent, Boolean useSBGN)
         {
             _SBML = sbmlContent;
-            Layout.ReplaceLayoutWithSBGNDefault = useSBGN;
-            Layout layout = SBMLExtension.Util.readLayout(_SBML);
+            Layout layout = SBMLExtension.Util.readLayout(_SBML, useSBGN);
             ReadFromLayout(layout);
         }
         /// <summary>
