@@ -283,18 +283,39 @@ namespace SBML2TikZ
                 {
                     byte[] PDFdata = File.ReadAllBytes(PDFfilename);
                     //delete the tempDir
-                    Directory.Delete(tempDir, true);
+                    try
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
                     return PDFdata;
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     System.Diagnostics.Debug.WriteLine(ex.StackTrace);
-                    Directory.Delete(tempDir, true);
+                    try
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                     return new byte[] { };
                 }
             }
-            Directory.Delete(tempDir, true);
+            try
+            {
+                Directory.Delete(tempDir, true);
+            }
+            catch (Exception)
+            {
+
+            }
             return new byte[] { }; //return an empty array
         }
         /// <summary>
@@ -376,9 +397,12 @@ namespace SBML2TikZ
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+                LastCompileException = ex;
                 compiled = false;
             }
         }
+
+        public static Exception LastCompileException { get; set; }
 
         /// <summary>
         /// Updates the <c>Layout</c> of this <c>Converter</c> 
