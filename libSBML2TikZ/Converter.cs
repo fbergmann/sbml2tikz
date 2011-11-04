@@ -39,7 +39,7 @@ namespace SBML2TikZ
 
         private Layout _layout;
 
-        public Layout layout
+        public Layout Layout
         {
             get { return _layout; }
             set
@@ -273,66 +273,69 @@ namespace SBML2TikZ
             return CompileTikZToPDF(tikzString);
         }
 
-        private static byte[] CompileTikZToPDF(string TikZstrings)
+        private static string _TempPath = Path.GetTempPath();
+        public static string TempPath
+        {
+            get
+            {
+                return _TempPath;
+            }
+            set
+            {
+                _TempPath = value;
+            }
+        }
+
+
+        private static void SaveDelete(string directory)
+        {
+            try
+            {
+                Directory.Delete(directory, true);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        private static byte[] CompileTikZToPDF(string tikzContent)
         {
             //Create a temp directory to generate the pdf and tex files
-            var tempDir = (Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+            var tempDir = (Path.Combine(TempPath, Path.GetRandomFileName()));
             Directory.CreateDirectory(tempDir);
 
             var tempFileName = Path.GetRandomFileName();
-            var TeXfilename = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(tempFileName) + ".tex");
-            var PDFfilename = Path.Combine(tempDir, Path.GetFileNameWithoutExtension(tempFileName) + ".pdf");
-            //string TeXfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".tex";
-            //string PDFfilename = tempDir + "\\" + Path.GetFileNameWithoutExtension(tempFileName) + ".pdf";
+            var baseName = Path.GetFileNameWithoutExtension(tempFileName);
+            var texFile = Path.Combine(tempDir, baseName + ".tex");
+            var pdfFile = Path.Combine(tempDir, baseName + ".pdf");
+            var result = new byte[] { };
 
             // write TikZstrings into TeXfilename
-            using (var writer = new StreamWriter(TeXfilename))
-            {
-                writer.WriteLine(TikZstrings);
-            }
+            File.WriteAllText(texFile, tikzContent);
 
             //Now convert the TeX file to PDF
-            Boolean compiled;
-            compiletoPDF(out compiled, TeXfilename);
-
+            bool compiled = CompileToPDF(texFile);
+            try
+            {
+                
             //if the compilation was successful, we convert the PDF to a byte buffer
             if (compiled)
             {
                 try
                 {
-                    var PDFdata = File.ReadAllBytes(PDFfilename);
-                    //delete the tempDir
-                    try
-                    {
-                        Directory.Delete(tempDir, true);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    return PDFdata;
+                    result =  File.ReadAllBytes(pdfFile);
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
-                    Debug.WriteLine(ex.StackTrace);
-                    try
-                    {
-                        Directory.Delete(tempDir, true);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    return new byte[] {};
+                    Debug.WriteLine(ex.StackTrace);                    
                 }
             }
-            try
-            {
-                Directory.Delete(tempDir, true);
             }
-            catch (Exception)
+            finally
             {
+                SaveDelete(tempDir);                    
             }
-            return new byte[] {}; //return an empty array
+            return result;
         }
 
         /// <summary>
@@ -342,16 +345,12 @@ namespace SBML2TikZ
         /// <returns></returns>
         public static byte[] ToPDF(string filename)
         {
-            var TikZstrings = ToTex(filename);
-
-            return CompileTikZToPDF(TikZstrings);
+            return CompileTikZToPDF(ToTex(filename));
         }
 
         public static byte[] ToPDF(string filename, Boolean useSBGN)
         {
-            var TikZstrings = ToTex(filename, useSBGN);
-
-            return CompileTikZToPDF(TikZstrings);
+            return CompileTikZToPDF(ToTex(filename, useSBGN));
         }
 
         private static string _LatexFileName = "pdflatex";
@@ -406,19 +405,16 @@ namespace SBML2TikZ
 
         //generates a pdf file given the path to an existing tex file using PDFLaTeX
         //compiled shows whether the compilation by PDFLaTeX was successful
-        public static void compiletoPDF(out Boolean compiled, string texfilename)
+        public static bool CompileToPDF(string fileName)
         {
-            if (!File.Exists(texfilename))
-            {
-                compiled = false;
-                return;
+            if (!File.Exists(fileName))
+            {                
+                return false;
             }
-
-            compiled = true;
+            var oldDir = Directory.GetCurrentDirectory();
             try
             {
-                var oldDir = Directory.GetCurrentDirectory();
-                var startInfo = new ProcessStartInfo {CreateNoWindow = true, UseShellExecute = false};
+                var startInfo = new ProcessStartInfo { CreateNoWindow = true, UseShellExecute = false };
 
                 if (HaveUser)
                 {
@@ -426,23 +422,29 @@ namespace SBML2TikZ
                     startInfo.Password = ConvertToSecure(Password);
                 }
 
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(texfilename));
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(fileName));
 
-                startInfo.Arguments = Path.GetFileName(texfilename) + " " + LatexArguments;
+                startInfo.Arguments = string.Format("{0} {1}",
+                                          Path.GetFileName(fileName),
+                                          LatexArguments);
                 startInfo.FileName = LatexFileName;
 
-                var p = Process.Start(startInfo);
-                p.WaitForExit();
-                p.Close();
-                Directory.SetCurrentDirectory(oldDir);
+                var process = Process.Start(startInfo);
+                process.WaitForExit();
+                process.Close();                
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine(ex.StackTrace);
                 LastCompileException = ex;
-                compiled = false;
+                return false;
             }
+            finally
+            {
+                Directory.SetCurrentDirectory(oldDir);
+            }
+            return true;
         }
 
         public static Exception LastCompileException { get; set; }
@@ -497,8 +499,7 @@ namespace SBML2TikZ
         public void ReadFromSBMLString(string sbmlContent, Boolean useSBGN)
         {
             _SBML = sbmlContent;
-            var layout = Util.readLayout(_SBML, useSBGN);
-            ReadFromLayout(layout);
+            ReadFromLayout(Util.readLayout(_SBML, useSBGN));
         }
 
         /// <summary>
@@ -513,17 +514,17 @@ namespace SBML2TikZ
 
         public string WriteFromLayout() // renders the first layout
         {
-            if (layout != null && layout._EmlRenderInformation.Count != 0 && !layout.Dimensions.IsZero)
+            if (Layout != null && Layout._EmlRenderInformation.Count != 0 && !Layout.Dimensions.IsZero)
             {
-                return ToTex(layout);
+                return ToTex(Layout);
             }
             return DisplayNullLayout();
         }
 
         public string WriteFromLayout(int layoutNum) //renders the specified layout
         {
-            if (layout != null && layout._EmlRenderInformation.Count != 0 && layoutNum < Util.Layouts.Count &&
-                !layout.Dimensions.IsZero)
+            if (Layout != null && Layout._EmlRenderInformation.Count != 0 && layoutNum < Util.Layouts.Count &&
+                !Layout.Dimensions.IsZero)
             {
                 var selectedLayout = Util.Layouts[layoutNum];
                 if (selectedLayout != null)

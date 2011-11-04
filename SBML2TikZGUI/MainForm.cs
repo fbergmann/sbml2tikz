@@ -156,7 +156,7 @@ namespace SBML2TikZ_GUI
             double hval;
             double wval;
            
-            if (this.conv.layout == null)
+            if (this.conv.Layout == null)
                 MessageBox.Show("Please provide a valid SBML input file!",
                     "Error",
                     MessageBoxButtons.OK,
